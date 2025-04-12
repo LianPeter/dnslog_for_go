@@ -1,0 +1,6 @@
+version: '3'
+services:
+  dnslog:
+    image: dnslog-for-go
+    ports:
+      - "8080:8080"

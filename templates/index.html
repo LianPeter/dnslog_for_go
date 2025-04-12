@@ -2,19 +2,20 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNSLog Web</title>
-    <link href="index_css.css" rel="stylesheet">
+    <link href="/static/index_css.css" rel="stylesheet">
 </head>
 <body>
 <div class="login-container">
     <h1>DNSLog</h1>
-    <form id="dnslog-form" action="http://localhost:8080/log_dns" method="GET">
-        <label for="domain_name">Enter the domain name:</label>
+    <form id="dnslog-form">
+        <label for="domain_name">Please enter the domain name:</label>
         <input type="text" id="domain_name" name="domain_name">
         <button type="submit" class="btn">Record DNS query</button>
     </form>
-    <div id="result"></div>
-    <script src="dnslog.js"></script>
+    <div id="result"></div>  <!-- 查询结果 -->
 </div>
+<script src="/static/dnslog.js"></script>
 </body>
 </html>
