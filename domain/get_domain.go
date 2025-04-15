@@ -42,7 +42,7 @@ func SubmitDomain(c *gin.Context) {
 		return
 	}
 
-	// 执行 DNS 查询
+	// dns查询
 	dnsResult := resolveDNS(domain.DomainName)
 
 	// 返回查询结果
@@ -55,7 +55,11 @@ func SubmitDomain(c *gin.Context) {
 
 // resolveDNS dns查询
 func resolveDNS(domainName string) DNSQueryResult { // 返回结构体即dns查询结果
-	c := new(dns.Client)
+	c := &dns.Client{
+		Net:     "udp",
+		Timeout: 5 * 1e9, // 5秒超时
+	}
+
 	message := new(dns.Msg)
 	message.SetQuestion(dns.Fqdn(domainName), dns.TypeA)
 
