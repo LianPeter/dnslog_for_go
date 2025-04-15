@@ -1,4 +1,4 @@
-package router
+package test
 
 import (
 	"dnslog_for_go/domain"
