@@ -1,7 +1,7 @@
 package config
 
 import (
-	"dnslog_for_go/domain"
+	"dnslog_for_go/internal/domain"
 	"log"
 	"os"
 )

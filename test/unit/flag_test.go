@@ -10,7 +10,7 @@ import (
 func parseArgs(args []string) (domain, wordlist, server string, workers int) {
 	// 设置默认值
 	domain = "baidu.com"
-	wordlist = ""
+	wordlist = "" // 一个包含大量“可能的子域名前缀”的文本文件
 	server = "8.8.8.8:53"
 	workers = 100
 

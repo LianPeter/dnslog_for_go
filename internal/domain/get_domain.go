@@ -1,12 +1,13 @@
 package domain
 
 import (
-	"dnslog_for_go/utils"
+	"dnslog_for_go/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/miekg/dns"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 var GlobalDomainNameForGetDomain string
@@ -57,7 +58,7 @@ func SubmitDomain(c *gin.Context) {
 func resolveDNS(domainName string) DNSQueryResult { // 返回结构体即dns查询结果
 	c := &dns.Client{
 		Net:     "udp",
-		Timeout: 5 * 1e9, // 5秒超时
+		Timeout: 5 * time.Second, // 设置超时时间
 	}
 
 	message := new(dns.Msg)

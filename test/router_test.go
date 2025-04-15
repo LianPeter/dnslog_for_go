@@ -1,7 +1,7 @@
 package test
 
 import (
-	"dnslog_for_go/domain"
+	"dnslog_for_go/internal/domain"
 	"github.com/gin-gonic/gin"
 )
 

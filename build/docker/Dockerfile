@@ -4,10 +4,10 @@ FROM golang:1.24 AS builder
 WORKDIR /app
 
 # 缓存模块依赖
-COPY go.mod go.sum ./
+COPY ../../go.mod go.sum ./
 RUN go mod download
 
-COPY . .
+COPY ../.. .
 
 # 🟢 关键：使用静态编译，避免动态依赖 GLIBC
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o dnslog_for_go
