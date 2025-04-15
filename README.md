@@ -10,6 +10,32 @@
 - Automatic domain validity checking
 - Simple and user-friendly web interface
 
+--- 
+## Project Structure
+├── build/
+│   └── docker/                 // Dockerfile and related files
+├── cmd/
+│   └── app/
+│       └── main.go             // Main application entry point
+├── internal/
+│   └── config/                 // Configuration handling
+│   └── domain/                 // Domain resolution logic
+│   └── log/                    // Logging utilities
+│   └── router/                 // Route definitions
+│   └── web/
+│       ├── templates/          // HTML templates
+│       ├── static/             // Static assets (CSS, JS, images)
+│       └── resources.go        // Embedded FS resources
+├── pkg/                        // Shared utility packages
+│   └── utils/                  
+├── test/                       // Test files
+│   └── utils/
+├── go.mod                      // Go module definition
+├── LICENSE                     // License file
+├── README.CN.md                // Chinese documentation
+├── README.md                   // English documentation
+
+
 ---
 
 ## Project Overview

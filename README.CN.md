@@ -11,6 +11,35 @@
 - 自动校验域名合法性
 - 简洁实用的 Web 界面交互
 
+--- 
+## 目录结构
+dnslog_for_go/
+├── build/
+│   └──docker/                  // dockerfile
+├── cmd/
+│   └── app/
+│       └── main.go             // 主程序
+├── internal/
+│   └── config/                 // 配置文件
+│   └── domain/                 // 域名解析
+│   └── log/                    // 日志相关
+│   └── router/                 // 路由
+│   └── web/
+│       ├── templates/          // 模板文件
+│       ├── static/             // 静态资源
+│       └──resources.go        // embed.FS 资源
+├── pkg/                        // 公共包
+│   └── utils/                  
+│
+│
+├── test/                       // 测试
+│   └── utils/
+│
+├── go.mod                      // go mod 文件
+├── LICENSE                     // 许可证
+├── README.CN.md
+├── README.md
+
 ---
 
 ## 项目介绍
