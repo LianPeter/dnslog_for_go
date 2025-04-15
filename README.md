@@ -12,6 +12,7 @@
 
 --- 
 ## Project Structure
+```
 ├── build/
 │   └── docker/                 // Dockerfile and related files
 ├── cmd/
@@ -34,7 +35,7 @@
 ├── LICENSE                     // License file
 ├── README.CN.md                // Chinese documentation
 ├── README.md                   // English documentation
-
+```
 
 ---
 

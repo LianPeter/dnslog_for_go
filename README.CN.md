@@ -13,6 +13,7 @@
 
 --- 
 ## 目录结构
+```
 dnslog_for_go/
 ├── build/
 │   └──docker/                  // dockerfile
@@ -39,6 +40,7 @@ dnslog_for_go/
 ├── LICENSE                     // 许可证
 ├── README.CN.md
 ├── README.md
+```
 
 ---
 
