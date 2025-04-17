@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"log"
+	"dnslog_for_go/internal/log_write"
 	"regexp"
 	"strings"
 )
@@ -18,7 +18,7 @@ func StandardizeDomain(domain string) bool {
 
 	// 长度限制
 	if len(domain) < 3 || len(domain) > 253 {
-		log.Println("域名长度必须在 3 到 253 字符之间")
+		log_write.Warn("域名太短或太长，长度应在 3 到 253 个字符之间")
 		return false
 	}
 
@@ -31,17 +31,17 @@ func StandardizeDomain(domain string) bool {
 		}
 	}
 	if !validTLD {
-		log.Println("域名必须以常见的顶级域名结尾，例如 .com、.net")
+		log_write.Warn("域名必须以常见的顶级域名结尾，例如 .com、.net")
 		return false
 	}
 
 	// 正则校验整个域名结构是否合法
 	match, _ := regexp.MatchString(`^(?i:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(?:\.(?i:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?))*\.[a-z]{2,}$`, domain)
 	if !match {
-		log.Println("域名结构不合法。允许多个标签，中间用点分隔，每个标签仅由字母数字和中划线组成，且不能以中划线开头或结尾")
+		log_write.Warn("域名格式不正确")
 		return false
 	}
 
-	log.Println("域名符合规范!")
+	log_write.Info("域名格式正确")
 	return true
 }

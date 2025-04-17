@@ -1,4 +1,4 @@
-package config
+package init_conf
 
 import (
 	"dnslog_for_go/internal/domain"
@@ -8,10 +8,7 @@ import (
 
 // IsExist 如果配置存在则不进行创建
 func IsExist() error {
-	// 测试
-	domain.GlobalDomainNameForGetDomain = "example.com"
-
-	_, err := os.Stat("config.yaml")
+	_, err := os.Stat("internal/config/domain.yaml")
 	if err == nil { // 文件存在
 		log.Println("config.yaml already exists, no need to create a new one.")
 		return nil

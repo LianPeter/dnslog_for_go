@@ -1,4 +1,4 @@
-package config
+package init_conf
 
 import (
 	"fmt"
@@ -23,7 +23,8 @@ func NewYaml(domainName string) error {
 		return err
 	}
 
-	err = os.WriteFile("config.yaml", data, 0644)
+	os.Chdir("internal/config")
+	err = os.WriteFile("domain.yaml", data, 0644)
 	if err != nil {
 		log.Println("Error writing config.yaml:", err)
 		return err
