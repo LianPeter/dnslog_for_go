@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"time"
 )
 
 var (
@@ -15,12 +16,14 @@ var (
 
 func InitZapLogger() {
 	once.Do(func() {
+		data := time.Now().Format("2006-01-02")
+
 		// 项目根下 logs 目录
 		projectDir, _ := os.Getwd()
 		logDir := filepath.Join(projectDir, "logs")
 		_ = os.MkdirAll(logDir, 0755)
 
-		logFile := filepath.Join(logDir, "zap_datalog.log")
+		logFile := filepath.Join(logDir, data+".log")
 
 		// 自定义 Encoder（输出格式）
 		encoderConfig := zapcore.EncoderConfig{
