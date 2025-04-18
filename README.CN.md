@@ -51,6 +51,7 @@ dnslog_for_go/
 - [gin 框架](https://github.com/gin-gonic/gin)
 - [viper 配置管理](https://github.com/spf13/viper)
 - [miekg/dns 库](https://github.com/miekg/dns)
+- [zap](https://github.com/uber-go/zap)
 
 ---
 
