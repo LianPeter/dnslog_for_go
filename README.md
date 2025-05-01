@@ -175,7 +175,7 @@ docker run --rm -p 8080:8080 dnslog-for-go
 ---
 
 ## TODO
-- [ ] Automatically generate dnslog domains
+- [x] Automatically generate dnslog domains
 - [ ] Connect to a database for persistent storage (TBD)
 - [ ] Improve front-end UI
 - [ ] Provide a native client UI (without relying on browser)
