@@ -1,4 +1,4 @@
-package unit
+package domain
 
 import (
 	"github.com/miekg/dns"

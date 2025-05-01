@@ -43,3 +43,11 @@ func SubmitDomain(c *gin.Context) {
 		c.JSON(http.StatusOK, dnsResult)
 	}
 }
+
+// RandomDomain 随机生成域名
+func RandomDomain(c *gin.Context) {
+	domainName := GeneratingDomain()
+	// GlobalDomainNameForGetDomain = domainName
+	// 返回生成的域名
+	c.JSON(http.StatusOK, gin.H{"domain": domainName})
+}
