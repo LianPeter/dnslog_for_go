@@ -1,7 +1,7 @@
 # dnslog_for_go
 
 ---
-[中文](README.CN.md) | [English](README.md)
+[中文](README.CN.md) | English
 
 --- 
 ## Features
