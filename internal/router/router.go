@@ -32,14 +32,14 @@ func StartServer(embedFS embed.FS) {
 	}
 	r.SetHTMLTemplate(tmpl)
 
-	// 路由处理
 	r.GET("/dnslog", domain.ShowForm)
 	r.POST("/submit", domain.SubmitDomain)
+	r.POST("/random-domain", domain.RandomDomain)
 
 	// 监听并启动服务器
 	if err := r.Run(":8080"); err != nil {
 		log_write.Error("Failed to run server: %v", zap.Error(err))
 	}
-	
+
 	log_write.Info("Server started on :8080")
 }

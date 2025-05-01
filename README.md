@@ -46,7 +46,7 @@
 - [gin framework](https://github.com/gin-gonic/gin)
 - [viper for configuration](https://github.com/spf13/viper)
 - [miekg/dns library](https://github.com/miekg/dns)
-- - [zap](https://github.com/uber-go/zap)
+- [zap](https://github.com/uber-go/zap)
 
 ---
 
