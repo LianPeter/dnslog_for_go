@@ -62,6 +62,7 @@ func RandomDomain(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"domain": domainName})
 }
 
+// ChangeServer 修改DNS服务器
 func ChangeServer(c *gin.Context) {
 	var dnsRequest ChangeDNSRequest
 
@@ -90,6 +91,7 @@ func ChangeServer(c *gin.Context) {
 	}
 }
 
+// ChangePact 修改协议
 func ChangePact(c *gin.Context) {
 	var pactRequest ChangePactRequest
 

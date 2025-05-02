@@ -2,6 +2,7 @@ package router
 
 import (
 	"dnslog_for_go/internal/domain"
+	"dnslog_for_go/internal/domain/dns_server"
 	"dnslog_for_go/internal/log_write"
 	"embed"
 	"github.com/gin-gonic/gin"
@@ -62,6 +63,8 @@ func StartServer(embedFS embed.FS) {
 
 	// 退出前清理
 	log_write.Info("Shutting down server gracefully...")
+	// init_conf.IsExist()
+	dns_server.DefaultConfig() // 恢复默认配置
 	signal.Stop(exitChannel)
 	time.Sleep(2 * time.Second) // 延迟处理
 }

@@ -23,9 +23,8 @@ type DNSQueryResult struct {
 func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 	c := &dns.Client{
 		Net:     config.GOLOBAL_PACT,
-		Timeout: 10 * time.Second, // 增加超时时间
+		Timeout: 10 * time.Second,
 	}
-
 	message := new(dns.Msg)
 	message.SetQuestion(dns.Fqdn(domainName), dns.TypeA) // 查询 A 记录（IPv4）
 
@@ -47,7 +46,7 @@ func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 		}
 	}
 
-	// 真实服务器地址（默认8.8.8.8)
+	// 获取 DNS 服务器地址（默认为 8.8.8.8）
 	dnsServer := getServer()
 	log_write.Info("正在查询 DNS 服务器", zap.String("server", dnsServer)) // 添加日志
 
