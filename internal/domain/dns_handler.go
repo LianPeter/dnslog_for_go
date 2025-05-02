@@ -7,7 +7,6 @@ import (
 	"dnslog_for_go/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-
 	"net/http"
 )
 
@@ -19,6 +18,12 @@ type ChangeDNSRequest struct {
 // ChangePactRequest 修改协议请求体
 type ChangePactRequest struct {
 	Pact string `json:"pact"`
+}
+
+// DNSQueryResult DNS 查询结果结构体
+type DNSQueryResult struct {
+	Domain  string   `json:"domain"`
+	Results []string `json:"results"` // 存储多个结果
 }
 
 // ShowForm 展示表单
@@ -44,11 +49,11 @@ func SubmitDomain(c *gin.Context) {
 		return
 	}
 
-	// dns查询
+	// DNS 查询
 	dnsResult := utils.ResolveDNS(domain.DomainName)
 
 	// 返回查询结果
-	if dnsResult.IP == "" {
+	if len(dnsResult.Results) == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "没有找到相关的 DNS 记录"})
 		log_write.Error("没有找到相关的 DNS 记录", zap.String("domain", domain.DomainName))
 	} else {
@@ -80,11 +85,11 @@ func ChangeServer(c *gin.Context) {
 		dns_server.ChangeServer(0)
 	case 1:
 		c.JSON(http.StatusOK, gin.H{"message": "DNS 服务器已更改为 223.5.5.5 (阿里)"})
-		log_write.Info("DNS 服务器已更改为223.5.5.5 (阿里)")
+		log_write.Info("DNS 服务器已更改为 223.5.5.5 (阿里)")
 		dns_server.ChangeServer(1)
 	case 2:
 		c.JSON(http.StatusOK, gin.H{"message": "DNS 服务器已更改为 127.0.0.1(本地)"})
-		log_write.Info("DNS 服务器已更改为127.0.0.1 (本地)")
+		log_write.Info("DNS 服务器已更改为 127.0.0.1 (本地)")
 		dns_server.ChangeServer(2)
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的选择"})

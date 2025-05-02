@@ -7,6 +7,12 @@ function init() {
     ChangePact();
 }
 
+/**
+ * 绑定表单提交事件
+ * @author william
+ * @returns {void}
+ * @throws {Error} - 如果表单元素未找到，则抛出错误
+ */
 function bindFormSubmit() {
     const form = document.getElementById('dnslog-form');
     form?.addEventListener('submit', function (event) {
@@ -25,6 +31,13 @@ function bindFormSubmit() {
     });
 }
 
+/**
+ * 从服务器获取DNS日志数据并更新UI
+ * @author william
+ * @param {string} domain - 要查询的域名
+ * @returns {void}
+ * @throws {Error} - 如果请求失败或返回错误，则抛出错误
+ */
 function fetchDns(domain) {
     fetch('http://localhost:8080/submit', {
         method: 'POST',
@@ -33,14 +46,15 @@ function fetchDns(domain) {
         },
         body: JSON.stringify({ domain_name: domain })
     })
-        .then(response => response.json())
-        .then(data => {
-            const resultDiv = document.getElementById('result');
+    .then(response => response.json())  // 解析 JSON 响应
+    .then(data => {
+        const resultDiv = document.getElementById('result');
 
-            if (data.error) {
-                resultDiv.innerHTML = `<p style="color:red;">错误: ${data.error}</p>`;
-            } else {
-                resultDiv.innerHTML = `
+        if (data.error) {
+            resultDiv.innerHTML = `<p style="color:red;">错误: ${data.error}</p>`;
+        } else {
+            // 初始化表格结构
+            let tableHtml = `
                 <table border="1" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
                     <thead>
                         <tr style="background-color: #f2f2f2;">
@@ -50,21 +64,39 @@ function fetchDns(domain) {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>${data.domain}</td>
-                            <td>${data.ip}</td>
-                            <td>${data.address}</td>
-                        </tr>
-                    </tbody>
-                </table>
             `;
-            }
-        })
-        .catch(error => {
-            console.error('请求失败:', error);
-        });
+            
+            // 循环遍历每个结果并生成表格行
+            data.results.forEach(result => {
+                // 访问正确的属性：result.ip 和 result.address
+                tableHtml += `
+                    <tr>
+                        <td>${data.domain}</td>  <!-- 显示域名 -->
+                        <td>${result.ip}</td>    <!-- 显示 IP 地址 -->
+                        <td>${result.address}</td> <!-- 显示 DNS 服务器地址 -->
+                    </tr>
+                `;
+            });
+
+            // 结束表格标签
+            tableHtml += `</tbody></table>`;
+
+            // 将生成的 HTML 插入到 resultDiv 中
+            resultDiv.innerHTML = tableHtml;
+        }
+    })
+    .catch(error => {
+        console.error('请求失败:', error);
+    });
 }
 
+
+
+
+/**
+ * 设置生成域名按钮的点击事件
+ * @author william
+ */
 function setupGenerateDomainButton() {
     const generateButton = document.getElementById('generate-domain-btn');
     generateButton?.addEventListener('click', function (event) {
@@ -85,6 +117,12 @@ function setupGenerateDomainButton() {
     });
 }
 
+/**
+ * 更改DNS服务器
+ * @author william
+ * @returns {void}
+ * @throws {Error} - 如果请求失败，则抛出错误
+ */
 function ChangeDNSServer() {
     document.getElementById("dns-select")?.addEventListener("change", function () {
         const selectedValue = this.value;
@@ -102,6 +140,12 @@ function ChangeDNSServer() {
 }
 
 
+/**
+ * 更改协议
+ * @author william
+ * @returns {void}
+ * @throws {Error} - 如果请求失败，则抛出错误
+ */
 function ChangePact() {
     document.getElementById("pact")?.addEventListener("change", function () {
         const selectPact = this.value.toLowerCase();  // 将选中的协议转为小写（"udp" 或 "tcp"）
