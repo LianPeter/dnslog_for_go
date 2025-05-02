@@ -22,12 +22,11 @@ func SubmitDomain(c *gin.Context) {
 
 	// 解析JSON数据
 	if err := c.ShouldBindJSON(&domain); err != nil {
-		// 解析出错，返回400 错误
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// 使用校验函数检查域名是否合法
+	// 检查域名是否合法
 	if !utils.StandardizeDomain(domain.DomainName) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "域名不合法，请重新输入"})
 		return
