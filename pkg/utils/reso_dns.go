@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"dnslog_for_go/internal/config"
 	"dnslog_for_go/internal/domain/dns_server"
 	"dnslog_for_go/internal/log_write"
 	"github.com/miekg/dns"
@@ -18,12 +19,10 @@ type DNSQueryResult struct {
 	Address string `json:"address"`
 }
 
-var GOLOBAL_PACT = "udp" // 默认协议
-
 // ResolveDNS dns查询
 func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 	c := &dns.Client{
-		Net:     GOLOBAL_PACT,
+		Net:     config.GOLOBAL_PACT,
 		Timeout: 10 * time.Second, // 增加超时时间
 	}
 

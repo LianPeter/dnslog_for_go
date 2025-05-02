@@ -1,7 +1,7 @@
 package init_conf
 
 import (
-	"dnslog_for_go/internal/domain"
+	"dnslog_for_go/internal/config"
 	"log"
 	"os"
 )
@@ -15,7 +15,7 @@ func IsExist() error {
 	} else if os.IsNotExist(err) { // 文件不存在
 		log.Println("config.yaml not found, creating new configuration...")
 		// 创建配置文件
-		err := NewYaml(domain.GlobalDomainNameForGetDomain)
+		err := NewYaml(config.GlobalDomainNameForGetDomain)
 		if err != nil { // 创建失败
 			log.Println("Error creating config.yaml:", err)
 			return err

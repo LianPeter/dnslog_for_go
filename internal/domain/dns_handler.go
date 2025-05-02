@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"dnslog_for_go/internal/config"
 	"dnslog_for_go/internal/domain/dns_server"
 	"dnslog_for_go/internal/log_write"
 	"dnslog_for_go/pkg/utils"
@@ -9,8 +10,6 @@ import (
 
 	"net/http"
 )
-
-var GlobalDomainNameForGetDomain string
 
 // ChangeDNSRequest 修改DNS请求体
 type ChangeDNSRequest struct {
@@ -104,11 +103,11 @@ func ChangePact(c *gin.Context) {
 	// 根据 pactRequest.Pact 的值更新全局协议
 	switch pactRequest.Pact {
 	case "udp":
-		utils.GOLOBAL_PACT = "udp"
+		config.GOLOBAL_PACT = "udp"
 		c.JSON(http.StatusOK, gin.H{"message": "协议已更改为 UDP"})
 		log_write.Info("协议已更改为 UDP")
 	case "tcp":
-		utils.GOLOBAL_PACT = "tcp"
+		config.GOLOBAL_PACT = "tcp"
 		c.JSON(http.StatusOK, gin.H{"message": "协议已更改为 TCP"})
 		log_write.Info("协议已更改为 TCP")
 	default:
