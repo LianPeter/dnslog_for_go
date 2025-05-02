@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"dnslog_for_go/internal/domain/dns_server"
 	"dnslog_for_go/internal/log_write"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
+	"gopkg.in/ini.v1"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -16,16 +19,15 @@ type DNSQueryResult struct {
 }
 
 // ResolveDNS dns查询
-func ResolveDNS(domainName string) DNSQueryResult { // 返回结构体即dns查询结果
+func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 	c := &dns.Client{
 		Net:     "udp",
-		Timeout: 5 * time.Second, // 设置超时时间
+		Timeout: 10 * time.Second, // 增加超时时间
 	}
 
 	message := new(dns.Msg)
-	message.SetQuestion(dns.Fqdn(domainName), dns.TypeA)
+	message.SetQuestion(dns.Fqdn(domainName), dns.TypeA) // 查询 A 记录（IPv4）
 
-	// 8.8.8.8:53可以更换
 	r, _, err := c.Exchange(message, "8.8.8.8:53")
 	if err != nil {
 		log_write.Error("DNS query failed: %v", zap.Error(err))
@@ -44,12 +46,41 @@ func ResolveDNS(domainName string) DNSQueryResult { // 返回结构体即dns查�
 		}
 	}
 
-	// 真实服务器地址（从 DNS 响应中尝试获取）
-	dnsServer := "8.8.8.8" // 实际用于查询的地址
+	// 真实服务器地址（默认8.8.8.8)
+	dnsServer := func() string { // 实际用于查询的地址
+		cfg, err := ini.Load("internal/config/dns_server.ini")
+		if err != nil {
+			log_write.Error("无法读取配置文件")
+			panic("无法读取配置文件")
+		}
+
+		current := cfg.Section("DNS").Key("server").String()
+		currentNum, err := strconv.Atoi(current)
+		if err != nil {
+			log_write.Error("配置值不是有效数字")
+			panic("配置值不是有效数字")
+		}
+		return dns_server.DnsServer(currentNum)
+	}
+
+	// 如果没有找到 IPv4 地址，尝试查询 IPv6 地址
+	if len(ipList) == 0 {
+		message.SetQuestion(dns.Fqdn(domainName), dns.TypeAAAA) // 查询 AAAA 记录（IPv6）
+		r, _, err = c.Exchange(message, "8.8.8.8:53")
+		if err != nil {
+			log_write.Error("DNS query failed for AAAA record: %v", zap.Error(err))
+		} else {
+			for _, ans := range r.Answer {
+				if aaaaRecord, ok := ans.(*dns.AAAA); ok {
+					ipList = append(ipList, aaaaRecord.AAAA.String())
+				}
+			}
+		}
+	}
 
 	return DNSQueryResult{
 		Domain:  domainName,
 		IP:      strings.Join(ipList, ", "),
-		Address: dnsServer,
+		Address: dnsServer(),
 	}
 }
