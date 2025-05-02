@@ -28,7 +28,7 @@ func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 	message := new(dns.Msg)
 	message.SetQuestion(dns.Fqdn(domainName), dns.TypeA) // 查询 A 记录（IPv4）
 
-	r, _, err := c.Exchange(message, "8.8.8.8:53")
+	r, _, err := c.Exchange(message, getServer()+":53")
 	if err != nil {
 		log_write.Error("DNS query failed: %v", zap.Error(err))
 		return DNSQueryResult{
@@ -47,26 +47,12 @@ func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 	}
 
 	// 真实服务器地址（默认8.8.8.8)
-	dnsServer := func() string { // 实际用于查询的地址
-		cfg, err := ini.Load("internal/config/dns_server.ini")
-		if err != nil {
-			log_write.Error("无法读取配置文件")
-			panic("无法读取配置文件")
-		}
-
-		current := cfg.Section("DNS").Key("server").String()
-		currentNum, err := strconv.Atoi(current)
-		if err != nil {
-			log_write.Error("配置值不是有效数字")
-			panic("配置值不是有效数字")
-		}
-		return dns_server.DnsServer(currentNum)
-	}
+	dnsServer := getServer()
 
 	// 如果没有找到 IPv4 地址，尝试查询 IPv6 地址
 	if len(ipList) == 0 {
 		message.SetQuestion(dns.Fqdn(domainName), dns.TypeAAAA) // 查询 AAAA 记录（IPv6）
-		r, _, err = c.Exchange(message, "8.8.8.8:53")
+		r, _, err = c.Exchange(message, getServer()+":53")
 		if err != nil {
 			log_write.Error("DNS query failed for AAAA record: %v", zap.Error(err))
 		} else {
@@ -81,6 +67,22 @@ func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 	return DNSQueryResult{
 		Domain:  domainName,
 		IP:      strings.Join(ipList, ", "),
-		Address: dnsServer(),
+		Address: dnsServer,
 	}
+}
+
+func getServer() string {
+	cfg, err := ini.Load("internal/config/dns_server.ini")
+	if err != nil {
+		log_write.Error("无法读取配置文件")
+		panic("无法读取配置文件")
+	}
+
+	current := cfg.Section("DNS").Key("server").String()
+	currentNum, err := strconv.Atoi(current)
+	if err != nil {
+		log_write.Error("配置值不是有效数字")
+		panic("配置值不是有效数字")
+	}
+	return dns_server.DnsServer(currentNum)
 }
