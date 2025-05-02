@@ -1,35 +1,29 @@
 let pollingInterval = null;
 
-/**
- * @description 页面加载完成后执行
- * @author william
- */
-window.onload = function () {
-    const form = document.getElementById('dnslog-form');
+function init() {
+    bindFormSubmit();
+    setupGenerateDomainButton();
+    ChangeDNSServer();
+}
 
-    // 可选链操作符 ? ，如果 form 不存在，则不执行后续代码
+function bindFormSubmit() {
+    const form = document.getElementById('dnslog-form');
     form?.addEventListener('submit', function (event) {
         event.preventDefault();
-
         const domain = document.getElementById('domain_name').value;
 
-        // 停止已有轮询
+        // 停止之前的轮询
         if (pollingInterval) clearInterval(pollingInterval);
 
-        // 停止-->立刻查询一次
+        // 开始新的轮询
         fetchDns(domain);
 
-        // 每2秒查询一次
         pollingInterval = setInterval(() => {
             fetchDns(domain);
-        }, 2000);
+        }, 2000);// 每2秒请求一次
     });
-};
+}
 
-/** 
- * @param {*} domain
- * @author william
- */
 function fetchDns(domain) {
     fetch('http://localhost:8080/submit', {
         method: 'POST',
@@ -70,10 +64,6 @@ function fetchDns(domain) {
         });
 }
 
-/**
- * 生成随机域名
- * @author william
- */
 function setupGenerateDomainButton() {
     const generateButton = document.getElementById('generate-domain-btn');
     generateButton?.addEventListener('click', function (event) {
@@ -82,17 +72,33 @@ function setupGenerateDomainButton() {
         fetch('http://localhost:8080/random-domain', {
             method: 'POST'
         })
-        .then(response => response.json())
-        .then(data => {
-            const domainInput = document.getElementById('domain_name');
-            domainInput.value = data.domain;
-        })
-        .catch(error => {
-            console.error('Error fetching domain:', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                const domainInput = document.getElementById('domain_name');
+                domainInput.value = data.domain;
+                fetchDns(data.domain);
+            })
+            .catch(error => {
+                console.error('Error fetching domain:', error);
+            });
     });
 }
 
-setupGenerateDomainButton();
+function ChangeDNSServer() {
+    document.getElementById("dns-select")?.addEventListener("change", function () {
+        const selectedValue = this.value;
+        fetch("http://localhost:8080/change", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ num: parseInt(selectedValue) })
+        })
+            .then(res => res.text())
+            .then(msg => alert(msg))
+            .catch(err => console.error("请求失败:", err));
+    })
+}
 
+window.onload = init;
 
