@@ -64,5 +64,5 @@ func setDNS(value string) error {
 	}
 
 	cfg.Section("DNS").Key("server").SetValue(value)
-	return cfg.SaveTo("dns_server.ini")
+	return cfg.SaveTo("internal/config/dns_server.ini")
 }
