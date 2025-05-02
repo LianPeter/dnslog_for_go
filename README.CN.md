@@ -52,6 +52,9 @@ dnslog_for_go/
 - [viper 配置管理](https://github.com/spf13/viper)
 - [miekg/dns 库](https://github.com/miekg/dns)
 - [zap](https://github.com/uber-go/zap)
+- [uuid](https://github.com/google/uuid)自动生成域名
+- [go embed](https://pkg.go.dev/embed) 嵌入静态资源
+- [ini配置管理](https://github.com/go-ini/ini/tree/v1.67.0)
 
 ---
 

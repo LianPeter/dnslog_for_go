@@ -47,6 +47,10 @@
 - [viper for configuration](https://github.com/spf13/viper)
 - [miekg/dns library](https://github.com/miekg/dns)
 - [zap](https://github.com/uber-go/zap)
+- - [uuid](https://github.com/google/uuid)Automatically generate domain names
+- [go embed](https://pkg.go.dev/embed) Embedding static resources
+- [ini](https://github.com/go-ini/ini/tree/v1.67.0)Configuration Management
+
 
 ---
 
