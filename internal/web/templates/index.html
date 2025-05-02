@@ -20,18 +20,22 @@
                 <button type="submit" class="btn">Record DNS query</button>
             </div>
         </form>
-        
+
         <div style="position: absolute; top: 20px; right: 30px; z-index: 1000;">
-            <label for="dns-select" style="color: white; font-weight: bold;">DNS 服务器：</label>
+            <label for="dns-select" style="color: white; font-weight: bold;">DNS SERVER:</label>
             <select id="dns-select" style="padding: 5px; border-radius: 5px;">
-                <option value="0">8.8.8.8 (Google)</option>
-                <option value="1">223.5.5.5 (阿里)</option>
+                <option value="0">Google</option>
+                <option value="1">alidns</option>
+                <option value="2">自建</option>
             </select>
+            <br>
+            <label for="pact" style="color: white; font-weight: bold;">PACT:</label>
+            <select id="pact" style="padding: 5px; border-radius: 5px;">
+                <option value="UDP">UDP</option>
+                <option value="TCP">TCP</option>
+            </select>
+
         </div>
-        
-        
-
-
 
         <div id="result"></div> <!-- 查询结果 -->
     </div>

@@ -2,7 +2,6 @@ package router
 
 import (
 	"dnslog_for_go/internal/domain"
-	"dnslog_for_go/internal/domain/dns_server"
 	"dnslog_for_go/internal/log_write"
 	"embed"
 	"github.com/gin-gonic/gin"
@@ -15,10 +14,6 @@ import (
 	"syscall"
 	"time"
 )
-
-type ChangeDNSRequest struct {
-	Num int `json:"num"`
-}
 
 func StartServer(embedFS embed.FS) {
 	r := gin.Default()
@@ -48,31 +43,8 @@ func StartServer(embedFS embed.FS) {
 	r.GET("/dnslog", domain.ShowForm)
 	r.POST("/submit", domain.SubmitDomain)
 	r.POST("/random-domain", domain.RandomDomain)
-
-	r.POST("/change", func(c *gin.Context) {
-		var req ChangeDNSRequest
-
-		// 绑定请求体到结构体
-		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
-			log_write.Error("Failed to bind JSON", zap.Error(err))
-			return
-		}
-
-		// 根据 num 的值做处理
-		switch req.Num {
-		case 0:
-			c.JSON(http.StatusOK, gin.H{"message": "DNS 服务器已更改为 8.8.8.8 (Google)"})
-			log_write.Info("DNS 服务器已更改为 8.8.8.8 (Google)")
-			dns_server.Change(0)
-		case 1:
-			c.JSON(http.StatusOK, gin.H{"message": "DNS 服务器已更改为 223.5.5.5 (阿里)"})
-			log_write.Info("DNS 服务器已更改为223.5.5.5 (阿里)")
-			dns_server.Change(1)
-		default:
-			c.JSON(http.StatusBadRequest, gin.H{"error": "无效的选择"})
-		}
-	})
+	r.POST("/change", domain.ChangeServer)
+	r.POST("/change-pact", domain.ChangePact)
 
 	// 启动服务器
 	go func() {

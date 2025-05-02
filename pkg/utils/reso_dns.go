@@ -18,10 +18,12 @@ type DNSQueryResult struct {
 	Address string `json:"address"`
 }
 
+var GOLOBAL_PACT = "udp" // 默认协议
+
 // ResolveDNS dns查询
 func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 	c := &dns.Client{
-		Net:     "udp",
+		Net:     GOLOBAL_PACT,
 		Timeout: 10 * time.Second, // 增加超时时间
 	}
 
@@ -48,6 +50,7 @@ func ResolveDNS(domainName string) DNSQueryResult { // 返回查询结果
 
 	// 真实服务器地址（默认8.8.8.8)
 	dnsServer := getServer()
+	log_write.Info("正在查询 DNS 服务器", zap.String("server", dnsServer)) // 添加日志
 
 	// 如果没有找到 IPv4 地址，尝试查询 IPv6 地址
 	if len(ipList) == 0 {
@@ -79,6 +82,10 @@ func getServer() string {
 	}
 
 	current := cfg.Section("DNS").Key("server").String()
+	if current == "127.0.0.1" {
+		return current
+	}
+
 	currentNum, err := strconv.Atoi(current)
 	if err != nil {
 		log_write.Error("配置值不是有效数字")

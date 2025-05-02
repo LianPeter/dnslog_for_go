@@ -7,13 +7,12 @@ import (
 	"strconv"
 )
 
-// Change 修改 DNS 服务器
+// ChangeServer 修改 DNS 服务器
 // num 设置的dns服务器编号
-func Change(num byte) {
+func ChangeServer(num byte) {
 	dir, _ := os.Getwd()
 	log_write.Info("当前工作目录:" + dir)
 
-	// 读取配置文件
 	cfg, err := ini.Load("internal/config/dns_server.ini")
 	if err != nil {
 		log_write.Error("无法读取配置文件")
@@ -22,7 +21,6 @@ func Change(num byte) {
 		log_write.Info("读取配置文件成功")
 	}
 
-	// 获取当前 DNS 设置
 	current := cfg.Section("DNS").Key("server").String()
 	currentNum, err := strconv.Atoi(current)
 	if err != nil {
@@ -30,13 +28,11 @@ func Change(num byte) {
 		panic("Configuration values are not valid numbers")
 	}
 
-	// 如果当前 DNS 已经是目标 DNS，则无需修改
 	if int(num) == currentNum {
 		log_write.Info("DNS 设置已是当前值，无需修改")
 		return
 	}
 
-	// 设置新的 DNS
 	setDnsErr := setDNS(strconv.Itoa(int(num)))
 	if setDnsErr != nil {
 		return
@@ -52,11 +48,10 @@ func Change(num byte) {
 		log_write.Info("保存配置成功")
 	}
 
-	// 日志记录修改后的 DNS
 	log_write.Info("DNS 设置已更新为: " + strconv.Itoa(int(num)))
 }
 
-// setDNS 通过系统命令设置 DNS
+// setDNS 设置 DNS 服务器
 func setDNS(value string) error {
 	cfg, err := ini.Load("internal/config/dns_server.ini")
 	if err != nil {

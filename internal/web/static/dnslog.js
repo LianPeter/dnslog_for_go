@@ -4,6 +4,7 @@ function init() {
     bindFormSubmit();
     setupGenerateDomainButton();
     ChangeDNSServer();
+    ChangePact();
 }
 
 function bindFormSubmit() {
@@ -99,6 +100,31 @@ function ChangeDNSServer() {
             .catch(err => console.error("请求失败:", err));
     })
 }
+
+
+function ChangePact() {
+    document.getElementById("pact")?.addEventListener("change", function () {
+        const selectPact = this.value.toLowerCase();  // 将选中的协议转为小写（"udp" 或 "tcp"）
+        
+        fetch("http://localhost:8080/change-pact", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ pact: selectPact })
+        })
+        .then(res => res.json())
+        .then(msg => {
+            if (msg.message) {
+                alert(msg.message);
+            } else {
+                alert("发生错误：" + msg.error);
+            }
+        })
+        .catch(err => console.error("请求失败:", err));
+    });
+}
+
 
 window.onload = init;
 

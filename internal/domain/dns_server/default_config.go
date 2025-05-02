@@ -7,7 +7,7 @@ func DefaultConfig() {
 	if err != nil {
 		panic("无法读取配置文件")
 	}
-	cfg.Section("DNS").Key("server").SetValue("0") // 设置默认 DNS 服务器为
+	cfg.Section("DNS").Key("server").SetValue("0")
 
 	err = cfg.SaveTo("internal/config/dns_server.ini")
 	if err != nil {
