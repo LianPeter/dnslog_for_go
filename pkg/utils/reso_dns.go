@@ -36,11 +36,11 @@ func ResolveDNS(domainName string) DNSQueryResult {
 
 	// 定义查询类型
 	queryTypes := []uint16{
-		dns.TypeA,     // A 记录
-		dns.TypeAAAA,  // AAAA 记录
-		dns.TypeCNAME, // CNAME 记录
-		dns.TypeMX,    // MX 记录
-		dns.TypeTXT,   // TXT 记录
+		dns.TypeA,
+		dns.TypeAAAA,
+		dns.TypeCNAME,
+		dns.TypeMX,
+		dns.TypeTXT,
 	}
 
 	// 循环执行不同类型的 DNS 查询
