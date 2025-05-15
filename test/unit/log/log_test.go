@@ -4,30 +4,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"testing"
 )
-
-func Test_log(t *testing.T) {
-	projectRoot := findProjectRoot()
-	logDir := filepath.Join(projectRoot, "logs")
-	logFile := "dnslog_for_go.log_write"
-
-	logFilePath := filepath.Join(logDir, logFile)
-
-	if err := os.MkdirAll(logDir, 0755); err != nil {
-		log.Fatal(err)
-	}
-
-	file, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	log.SetOutput(file)
-
-	log.Println("日志文件路径:", logFilePath)
-}
 
 func findProjectRoot() string {
 	dir, err := os.Getwd()
@@ -45,4 +22,24 @@ func findProjectRoot() string {
 		}
 		dir = parent
 	}
+}
+
+func InitLog() {
+	projectDir := findProjectRoot()
+	logDir := filepath.Join(projectDir, "logs")
+	logFile := "dnslog_for_go.log_write"
+
+	logFilePath := filepath.Join(logDir, logFile)
+	if err := os.MkdirAll(logDir, 0755); err != nil {
+		log.Fatal(err)
+	}
+
+	file, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	log.SetOutput(file)
+
 }

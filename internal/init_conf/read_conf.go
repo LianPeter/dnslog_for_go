@@ -2,7 +2,7 @@ package init_conf
 
 import (
 	"dnslog_for_go/internal/config"
-	"dnslog_for_go/internal/log_write"
+	"dnslog_for_go/pkg/utils"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"log"
@@ -22,6 +22,6 @@ func ReadConfig() {
 	readDomain := viper.GetString("domain")
 	config.GlobalDomainNameForReadConfig = readDomain
 
-	log_write.Info("读取配置文件成功", zap.String("domain", readDomain))
+	utils.Info("读取配置文件成功", zap.String("domain", readDomain))
 
 }

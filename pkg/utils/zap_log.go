@@ -1,4 +1,4 @@
-package log_write
+package utils
 
 import (
 	"go.uber.org/zap"

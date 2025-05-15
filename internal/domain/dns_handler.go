@@ -3,7 +3,6 @@ package domain
 import (
 	"dnslog_for_go/internal/config"
 	"dnslog_for_go/internal/domain/dns_server"
-	"dnslog_for_go/internal/log_write"
 	"dnslog_for_go/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -55,7 +54,7 @@ func SubmitDomain(c *gin.Context) {
 	// 返回查询结果
 	if len(dnsResult.Results) == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "没有找到相关的 DNS 记录"})
-		log_write.Error("没有找到相关的 DNS 记录", zap.String("domain", domain.DomainName))
+		utils.Error("没有找到相关的 DNS 记录", zap.String("domain", domain.DomainName))
 	} else {
 		c.JSON(http.StatusOK, dnsResult)
 	}
@@ -74,24 +73,25 @@ func ChangeServer(c *gin.Context) {
 	// 绑定请求体到结构体
 	if err := c.ShouldBindJSON(&dnsRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
-		log_write.Error("Failed to bind JSON", zap.Error(err))
+		utils.Error("Failed to bind JSON", zap.Error(err))
 		return
 	}
 
 	switch dnsRequest.Num {
 	case 0:
 		c.JSON(http.StatusOK, gin.H{"message": "DNS 服务器已更改为 8.8.8.8 (Google)"})
-		log_write.Info("DNS 服务器已更改为 8.8.8.8 (Google)")
+		utils.Info("DNS 服务器已更改为 8.8.8.8 (Google)")
 		dns_server.ChangeServer(0)
 	case 1:
 		c.JSON(http.StatusOK, gin.H{"message": "DNS 服务器已更改为 223.5.5.5 (阿里)"})
-		log_write.Info("DNS 服务器已更改为 223.5.5.5 (阿里)")
+		utils.Info("DNS 服务器已更改为 223.5.5.5 (阿里)")
 		dns_server.ChangeServer(1)
 	case 2:
 		c.JSON(http.StatusOK, gin.H{"message": "DNS 服务器已更改为 127.0.0.1(本地)"})
-		log_write.Info("DNS 服务器已更改为 127.0.0.1 (本地)")
+		utils.Info("DNS 服务器已更改为 127.0.0.1 (本地)")
 		dns_server.ChangeServer(2)
 	default:
+		utils.Error("无效的选择", zap.Int("num", dnsRequest.Num))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的选择"})
 	}
 }
@@ -103,7 +103,7 @@ func ChangePact(c *gin.Context) {
 	// 绑定请求体到结构体
 	if err := c.ShouldBindJSON(&pactRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
-		log_write.Error("Failed to bind JSON", zap.Error(err))
+		utils.Error("Failed to bind JSON", zap.Error(err))
 		return
 	}
 
@@ -112,11 +112,11 @@ func ChangePact(c *gin.Context) {
 	case "udp":
 		config.GOLOBAL_PACT = "udp"
 		c.JSON(http.StatusOK, gin.H{"message": "协议已更改为 UDP"})
-		log_write.Info("协议已更改为 UDP")
+		utils.Info("协议已更改为 UDP")
 	case "tcp":
 		config.GOLOBAL_PACT = "tcp"
 		c.JSON(http.StatusOK, gin.H{"message": "协议已更改为 TCP"})
-		log_write.Info("协议已更改为 TCP")
+		utils.Info("协议已更改为 TCP")
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的选择"})
 	}

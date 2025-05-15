@@ -3,7 +3,6 @@ package utils
 import (
 	"dnslog_for_go/internal/config"
 	"dnslog_for_go/internal/domain/dns_server"
-	"dnslog_for_go/internal/log_write"
 	"fmt"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
@@ -49,7 +48,7 @@ func ResolveDNS(domainName string) DNSQueryResult {
 	}
 
 	// 检查结果
-	log_write.Info("查询结果", zap.Int("resultCount", len(results)))
+	Info("查询结果", zap.Int("resultCount", len(results)))
 
 	// 返回多个结果
 	return DNSQueryResult{
@@ -65,7 +64,7 @@ func appendResults(results []DNSResult, domainName string, queryType uint16, c *
 
 	r, _, err := c.Exchange(message, getServer()+":53")
 	if err != nil {
-		log_write.Error(fmt.Sprintf("DNS query failed for type %d: %v", queryType, err), zap.Error(err))
+		Error(fmt.Sprintf("DNS query failed for type %d: %v", queryType, err), zap.Error(err))
 		return results
 	}
 
@@ -89,33 +88,7 @@ func appendResults(results []DNSResult, domainName string, queryType uint16, c *
 				})
 			}
 		}
-	case dns.TypeCNAME:
-		for _, ans := range r.Answer {
-			if cnameRecord, ok := ans.(*dns.CNAME); ok {
-				results = append(results, DNSResult{
-					IP:      cnameRecord.Target,
-					Address: getServer(),
-				})
-			}
-		}
-	case dns.TypeMX:
-		for _, ans := range r.Answer {
-			if mxRecord, ok := ans.(*dns.MX); ok {
-				results = append(results, DNSResult{
-					IP:      mxRecord.Mx,
-					Address: getServer(),
-				})
-			}
-		}
-	case dns.TypeTXT:
-		for _, ans := range r.Answer {
-			if txtRecord, ok := ans.(*dns.TXT); ok {
-				results = append(results, DNSResult{
-					IP:      txtRecord.Txt[0], // 只取第一个 TXT 记录
-					Address: getServer(),
-				})
-			}
-		}
+
 	}
 	return results
 }
@@ -124,7 +97,7 @@ func appendResults(results []DNSResult, domainName string, queryType uint16, c *
 func getServer() string {
 	cfg, err := ini.Load("internal/config/dns_server.ini")
 	if err != nil {
-		log_write.Error("无法读取配置文件")
+		Error("无法读取配置文件")
 		panic("无法读取配置文件")
 	}
 
@@ -135,7 +108,7 @@ func getServer() string {
 
 	currentNum, err := strconv.Atoi(current)
 	if err != nil {
-		log_write.Error("配置值不是有效数字")
+		Error("配置值不是有效数字")
 		panic("配置值不是有效数字")
 	}
 	return dns_server.DnsServer(currentNum)

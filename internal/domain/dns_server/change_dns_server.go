@@ -1,7 +1,7 @@
 package dns_server
 
 import (
-	"dnslog_for_go/internal/log_write"
+	"dnslog_for_go/pkg/utils"
 	"gopkg.in/ini.v1"
 	"os"
 	"strconv"
@@ -11,25 +11,25 @@ import (
 // num 设置的dns服务器编号
 func ChangeServer(num byte) {
 	dir, _ := os.Getwd()
-	log_write.Info("当前工作目录:" + dir)
+	utils.Info("当前工作目录:" + dir)
 
 	cfg, err := ini.Load("internal/config/dns_server.ini")
 	if err != nil {
-		log_write.Error("无法读取配置文件")
+		utils.Error("无法读取配置文件")
 		panic("Unable to read configuration file")
 	} else {
-		log_write.Info("读取配置文件成功")
+		utils.Info("读取配置文件成功")
 	}
 
 	current := cfg.Section("DNS").Key("server").String()
 	currentNum, err := strconv.Atoi(current)
 	if err != nil {
-		log_write.Error("配置值不是有效数字")
+		utils.Error("配置值不是有效数字")
 		panic("Configuration values are not valid numbers")
 	}
 
 	if int(num) == currentNum {
-		log_write.Info("DNS 设置已是当前值，无需修改")
+		utils.Info("DNS 设置已是当前值，无需修改")
 		return
 	}
 
@@ -42,13 +42,13 @@ func ChangeServer(num byte) {
 	cfg.Section("DNS").Key("server").SetValue(strconv.Itoa(int(num)))
 	err = cfg.SaveTo("internal/config/dns_server.ini")
 	if err != nil {
-		log_write.Error("保存配置失败")
+		utils.Error("保存配置失败")
 		panic("Failed to save configuration")
 	} else {
-		log_write.Info("保存配置成功")
+		utils.Info("保存配置成功")
 	}
 
-	log_write.Info("DNS 设置已更新为: " + strconv.Itoa(int(num)))
+	utils.Info("DNS 设置已更新为: " + strconv.Itoa(int(num)))
 }
 
 // setDNS 设置 DNS 服务器
