@@ -1,4 +1,4 @@
-package utils
+package log
 
 import (
 	"go.uber.org/zap"
@@ -18,7 +18,7 @@ func InitZapLogger() {
 	once.Do(func() {
 		data := time.Now().Format("2006-01-02")
 
-		// 项目根下 logs 目录
+		// 项目根目录下 logs 目录
 		projectDir, _ := os.Getwd()
 		logDir := filepath.Join(projectDir, "logs")
 		_ = os.MkdirAll(logDir, 0755)

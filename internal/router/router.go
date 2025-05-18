@@ -3,7 +3,7 @@ package router
 import (
 	"dnslog_for_go/internal/domain"
 	"dnslog_for_go/internal/domain/dns_server"
-	"dnslog_for_go/pkg/utils"
+	"dnslog_for_go/pkg/log"
 	"embed"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -22,7 +22,7 @@ func StartServer(embedFS embed.FS) {
 	// 嵌入静态文件
 	staticFiles, err := fs.Sub(embedFS, "static")
 	if err != nil {
-		utils.Error("Failed to embed static files", zap.Error(err))
+		log.Error("Failed to embed static files", zap.Error(err))
 		return
 	}
 	r.StaticFS("/static", http.FS(staticFiles))
@@ -30,12 +30,12 @@ func StartServer(embedFS embed.FS) {
 	// 嵌入 HTML 模板
 	tmplFiles, err := fs.Sub(embedFS, "templates")
 	if err != nil {
-		utils.Error("Failed to embed template files", zap.Error(err))
+		log.Error("Failed to embed template files", zap.Error(err))
 		return
 	}
 	tmpl, err := template.ParseFS(tmplFiles, "*.html")
 	if err != nil {
-		utils.Error("Failed to parse template files", zap.Error(err))
+		log.Error("Failed to parse template files", zap.Error(err))
 		return
 	}
 	r.SetHTMLTemplate(tmpl)
@@ -50,11 +50,11 @@ func StartServer(embedFS embed.FS) {
 	// 启动服务器
 	go func() {
 		if err := r.Run(":8080"); err != nil {
-			utils.Error("Failed to run server", zap.Error(err))
+			log.Error("Failed to run server", zap.Error(err))
 		}
 	}()
 
-	utils.Info("Server started on :8080")
+	log.Info("Server started on :8080")
 
 	// 退出
 	exitChannel := make(chan os.Signal, 1)
@@ -62,7 +62,7 @@ func StartServer(embedFS embed.FS) {
 	<-exitChannel
 
 	// 退出前清理
-	utils.Info("Shutting down server gracefully...")
+	log.Info("Shutting down server gracefully...")
 	// init_conf.IsExist()
 	dns_server.DefaultConfig() // 恢复默认配置
 	signal.Stop(exitChannel)

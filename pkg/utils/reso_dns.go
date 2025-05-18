@@ -3,6 +3,7 @@ package utils
 import (
 	"dnslog_for_go/internal/config"
 	"dnslog_for_go/internal/domain/dns_server"
+	"dnslog_for_go/pkg/log"
 	"fmt"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
@@ -48,7 +49,7 @@ func ResolveDNS(domainName string) DNSQueryResult {
 	}
 
 	// 检查结果
-	Info("查询结果", zap.Int("resultCount", len(results)))
+	log.Info("查询结果", zap.Int("resultCount", len(results)))
 
 	// 返回多个结果
 	return DNSQueryResult{
@@ -64,7 +65,7 @@ func appendResults(results []DNSResult, domainName string, queryType uint16, c *
 
 	r, _, err := c.Exchange(message, getServer()+":53")
 	if err != nil {
-		Error(fmt.Sprintf("DNS query failed for type %d: %v", queryType, err), zap.Error(err))
+		log.Error(fmt.Sprintf("DNS query failed for type %d: %v", queryType, err), zap.Error(err))
 		return results
 	}
 
@@ -97,7 +98,7 @@ func appendResults(results []DNSResult, domainName string, queryType uint16, c *
 func getServer() string {
 	cfg, err := ini.Load("internal/config/dns_server.ini")
 	if err != nil {
-		Error("无法读取配置文件")
+		log.Error("无法读取配置文件")
 		panic("无法读取配置文件")
 	}
 
@@ -108,7 +109,7 @@ func getServer() string {
 
 	currentNum, err := strconv.Atoi(current)
 	if err != nil {
-		Error("配置值不是有效数字")
+		log.Error("配置值不是有效数字")
 		panic("配置值不是有效数字")
 	}
 	return dns_server.DnsServer(currentNum)

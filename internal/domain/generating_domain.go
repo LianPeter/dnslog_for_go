@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"dnslog_for_go/pkg/utils"
+	"dnslog_for_go/pkg/log"
 	"fmt"
 	"github.com/google/uuid"
 	"math/rand"
@@ -22,7 +22,7 @@ func GeneratingDomain() string {
 	}
 	shortDomain := cleaned[:10]
 
-	utils.Info("生成的短域名为: " + shortDomain)
+	log.Info("生成的短域名为: " + shortDomain)
 
 	if len(shortDomain) > 10 {
 		return fmt.Sprintf("域名长度超过限制: %s", shortDomain)
@@ -33,6 +33,6 @@ func GeneratingDomain() string {
 	tld := commonTLDs[i]
 	domain := fmt.Sprintf("%s%s", shortDomain, tld)
 
-	utils.Info("完整的域名为: " + domain)
+	log.Info("完整的域名为: " + domain)
 	return domain
 }

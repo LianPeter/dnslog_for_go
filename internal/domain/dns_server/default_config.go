@@ -1,7 +1,7 @@
 package dns_server
 
 import (
-	"dnslog_for_go/pkg/utils"
+	"dnslog_for_go/pkg/log"
 	"gopkg.in/ini.v1"
 )
 
@@ -16,6 +16,6 @@ func DefaultConfig() {
 	if err != nil {
 		panic("默认配置恢复失败")
 	} else {
-		utils.Info("默认配置恢复成功")
+		log.Info("默认配置恢复成功")
 	}
 }
