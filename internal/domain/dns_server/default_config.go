@@ -2,10 +2,17 @@ package dns_server
 
 import (
 	"dnslog_for_go/pkg/log"
+	"go.uber.org/zap"
 	"gopkg.in/ini.v1"
 )
 
 func DefaultConfig() {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Error("程序异常终止: ", zap.Any("r", r))
+		}
+	}()
+
 	cfg, err := ini.Load("internal/config/dns_server.ini")
 	if err != nil {
 		panic("无法读取配置文件")
